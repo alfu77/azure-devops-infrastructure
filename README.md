@@ -34,3 +34,7 @@ The project emphasizes repeatable deployments, container image management, workl
 
 The objective is to establish a maintainable CI/CD process that connects source control, container builds, image publishing, and Kubernetes deployments on Azure.
 
+## Operations and Troubleshooting
+
+See [the operations and troubleshooting record](docs/operations-and-troubleshooting.md) for the Azure and CI/CD errors encountered, their causes and resolutions, Terraform changes, deployment naming/IP migration, and commonly used commands.
+
