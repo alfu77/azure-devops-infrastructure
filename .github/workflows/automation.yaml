@@ -8,16 +8,16 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Azure Login
-        uses: azure/login@v2
+        uses: azure/login@v3
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
@@ -35,7 +35,7 @@ jobs:
 
           echo "ACR_NAME=$ACR_NAME" >> "$GITHUB_ENV"
           echo "ACR_LOGIN_SERVER=$ACR_LOGIN_SERVER" >> "$GITHUB_ENV"
-          echo "IMAGE=$ACR_LOGIN_SERVER/nimbus-site:${GITHUB_SHA}" >> "$GITHUB_ENV"
+          echo "IMAGE=$ACR_LOGIN_SERVER/my-portfolio:${GITHUB_SHA}" >> "$GITHUB_ENV"
 
       - name: Log in to Azure Container Registry
         shell: bash
@@ -43,7 +43,7 @@ jobs:
 
       - name: Build Docker image
         shell: bash
-        run: docker build -t "${IMAGE}" ./my-portfolio
+        run: docker build -t "${IMAGE}" "./portfolio website"
 
       - name: Push image to ACR
         shell: bash
@@ -60,5 +60,5 @@ jobs:
       - name: Deploy to AKS
         shell: bash
         run: |
-          kubectl set image deployment/nimbus-site web="${IMAGE}"
-          kubectl rollout status deployment/nimbus-site --timeout=180s
+          kubectl set image deployment/my-portfolio web="${IMAGE}"
+          kubectl rollout status deployment/my-portfolio --timeout=180s
