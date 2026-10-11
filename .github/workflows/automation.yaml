@@ -43,7 +43,7 @@ jobs:
 
       - name: Build Docker image
         shell: bash
-        run: docker build -t "${IMAGE}" ./my-portfolio
+        run: docker build -t "${IMAGE}" "./portfolio website"
 
       - name: Push image to ACR
         shell: bash

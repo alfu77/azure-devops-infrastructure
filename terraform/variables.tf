@@ -4,6 +4,11 @@ variable "project_name" {
   default     = "ghost"
 }
 
+variable "github_actions_principal_object_id" {
+  description = "Object ID of the service principal used by the GitHub Actions workflow"
+  type        = string
+}
+
 variable "location" {
   description = "Azure region to deploy resources (e.g., UK South)"
   type        = string
