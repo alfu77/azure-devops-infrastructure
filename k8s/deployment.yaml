@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nimbus-site
+  labels:
+    app: nimbus-site
+spec:
+  replicas: 2                        # run 2 pods
+  selector:
+    matchLabels:
+      app: nimbus-site
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: nimbus-site
+    spec:
+      containers:
+        - name: web
+          image: ghostacr77.azurecr.io/my-portfolio:mobile-cachefix-20261011
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          resources:                # tiny but realistic
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+            limits:
+              cpu: "250m"
+              memory: "128Mi"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 10
