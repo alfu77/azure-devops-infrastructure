@@ -165,7 +165,7 @@ h1, h2, h3, p, figure { margin-top: 0; }
   .primary-nav a { padding: 14px 2px; border-bottom: 1px solid var(--line); }
   .primary-nav .nav-contact { justify-content: space-between; margin-top: 12px; padding: 13px 12px; border: 1px solid var(--ink); }
   .hero { grid-template-columns: 1fr; gap: 34px; min-height: auto; padding-block: 72px 65px; }
-  .hero h1 { max-width: 520px; margin-top: 23px; font-size: 54px; }
+  .hero h1 { max-width: 520px; margin-top: 23px; font-size: 46px; }
   .hero-intro { max-width: 410px; font-size: 17px; }
   .hero-location { margin-top: 30px; }
   .hero-brand { grid-template-columns: auto 1fr; grid-template-rows: auto auto; justify-items: start; justify-self: start; gap: 3px 15px; width: auto; }
