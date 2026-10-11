@@ -60,5 +60,7 @@ jobs:
       - name: Deploy to AKS
         shell: bash
         run: |
-          kubectl set image deployment/nimbus-site web="${IMAGE}"
-          kubectl rollout status deployment/nimbus-site --timeout=180s
+          kubectl apply -f k8s/deployment.yaml
+          kubectl set image deployment/my-portfolio web="${IMAGE}"
+          kubectl rollout status deployment/my-portfolio --timeout=180s
+          kubectl apply -f k8s/service.yaml
