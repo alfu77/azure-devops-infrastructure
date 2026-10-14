@@ -21,8 +21,8 @@ jobs:
     env:
       ARM_USE_CLI: "true"
       ARM_USE_AZUREAD: "true"
-      TF_VAR_github_actions_principal_object_id: ${{ secrets.WEBSITE_PRINCIPAL_OBJECT_ID }}
-      TF_VAR_terraform_principal_object_id: ${{ secrets.TERRAFORM_PRINCIPAL_OBJECT_ID }}
+      TF_VAR_github_actions_principal_object_id: "8dc5278a-9016-4d62-91cd-119c948ded40"
+      TF_VAR_terraform_principal_object_id: "ed81dc60-b8a8-4408-a0e0-07444cbc856b"
 
     steps:
       - name: Checkout repository
@@ -37,22 +37,6 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.9.8
-
-      - name: Check principal object IDs
-        shell: bash
-        env:
-          WEBSITE_PRINCIPAL_ID: ${{ secrets.WEBSITE_PRINCIPAL_OBJECT_ID }}
-          TERRAFORM_PRINCIPAL_ID: ${{ secrets.TERRAFORM_PRINCIPAL_OBJECT_ID }}
-        run: |
-          guid_pattern='^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
-          if [[ ! "${WEBSITE_PRINCIPAL_ID}" =~ ${guid_pattern} ]]; then
-            echo "Set WEBSITE_PRINCIPAL_OBJECT_ID to the website deployment service principal object ID (a GUID)."
-            exit 1
-          fi
-          if [[ ! "${TERRAFORM_PRINCIPAL_ID}" =~ ${guid_pattern} ]]; then
-            echo "Set TERRAFORM_PRINCIPAL_OBJECT_ID to the Terraform service principal object ID (a GUID)."
-            exit 1
-          fi
 
       - name: Terraform format check
         run: terraform fmt -check -recursive terraform
