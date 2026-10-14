@@ -1,73 +1,73 @@
 name: Terraform Infrastructure
 
 on:
-	push:
-		branches:
-			- main
-		paths:
-			- "terraform/**"
-			- ".github/workflows/terraform.yaml"
+  push:
+    branches:
+      - main
+    paths:
+      - "terraform/**"
+      - ".github/workflows/terraform.yaml"
 
 permissions:
-	contents: read
+  contents: read
 
 concurrency:
-	group: terraform-${{ github.ref }}
-	cancel-in-progress: false
+  group: terraform-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-	terraform:
-		runs-on: ubuntu-latest
-		env:
-			ARM_USE_CLI: "true"
-			ARM_USE_AZUREAD: "true"
-			TF_VAR_github_actions_principal_object_id: ${{ vars.GITHUB_ACTIONS_PRINCIPAL_OBJECT_ID }}
-			TF_VAR_terraform_principal_object_id: ${{ vars.TERRAFORM_PRINCIPAL_OBJECT_ID }}
+  terraform:
+    runs-on: ubuntu-latest
+    env:
+      ARM_USE_CLI: "true"
+      ARM_USE_AZUREAD: "true"
+      TF_VAR_github_actions_principal_object_id: ${{ vars.GITHUB_ACTIONS_PRINCIPAL_OBJECT_ID }}
+      TF_VAR_terraform_principal_object_id: ${{ vars.TERRAFORM_PRINCIPAL_OBJECT_ID }}
 
-		steps:
-			- name: Checkout repository
-				uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-			- name: Log in to Azure with the Terraform identity
-				uses: azure/login@v2
-				with:
-					creds: ${{ secrets.AZURE_TERRAFORM_CREDENTIALS }}
+      - name: Log in to Azure with the Terraform identity
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_TERRAFORM_CREDENTIALS }}
 
-			- name: Set up Terraform
-				uses: hashicorp/setup-terraform@v3
-				with:
-					terraform_version: 1.9.8
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.8
 
-			- name: Check principal object IDs
-				shell: bash
-				env:
-					WEBSITE_PRINCIPAL_ID: ${{ vars.GITHUB_ACTIONS_PRINCIPAL_OBJECT_ID }}
-					TERRAFORM_PRINCIPAL_ID: ${{ vars.TERRAFORM_PRINCIPAL_OBJECT_ID }}
-				run: |
-					guid_pattern='^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
-					if [[ ! "${WEBSITE_PRINCIPAL_ID}" =~ ${guid_pattern} ]]; then
-						echo "Set GITHUB_ACTIONS_PRINCIPAL_OBJECT_ID to the website deployment service principal object ID (a GUID)."
-						exit 1
-					fi
-					if [[ ! "${TERRAFORM_PRINCIPAL_ID}" =~ ${guid_pattern} ]]; then
-						echo "Set TERRAFORM_PRINCIPAL_OBJECT_ID to the Terraform service principal object ID (a GUID)."
-						exit 1
-					fi
+      - name: Check principal object IDs
+        shell: bash
+        env:
+          WEBSITE_PRINCIPAL_ID: ${{ vars.GITHUB_ACTIONS_PRINCIPAL_OBJECT_ID }}
+          TERRAFORM_PRINCIPAL_ID: ${{ vars.TERRAFORM_PRINCIPAL_OBJECT_ID }}
+        run: |
+          guid_pattern='^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+          if [[ ! "${WEBSITE_PRINCIPAL_ID}" =~ ${guid_pattern} ]]; then
+            echo "Set GITHUB_ACTIONS_PRINCIPAL_OBJECT_ID to the website deployment service principal object ID (a GUID)."
+            exit 1
+          fi
+          if [[ ! "${TERRAFORM_PRINCIPAL_ID}" =~ ${guid_pattern} ]]; then
+            echo "Set TERRAFORM_PRINCIPAL_OBJECT_ID to the Terraform service principal object ID (a GUID)."
+            exit 1
+          fi
 
-			- name: Terraform format check
-				run: terraform fmt -check -recursive terraform
+      - name: Terraform format check
+        run: terraform fmt -check -recursive terraform
 
-			- name: Terraform init
-				run: terraform -chdir=terraform init -input=false
+      - name: Terraform init
+        run: terraform -chdir=terraform init -input=false
 
-			- name: Terraform validate
-				run: terraform -chdir=terraform validate
+      - name: Terraform validate
+        run: terraform -chdir=terraform validate
 
-			- name: Terraform plan
-				run: terraform -chdir=terraform plan -input=false -out=tfplan
+      - name: Terraform plan
+        run: terraform -chdir=terraform plan -input=false -out=tfplan
 
-			- name: Show Terraform plan
-				run: terraform -chdir=terraform show -no-color tfplan
+      - name: Show Terraform plan
+        run: terraform -chdir=terraform show -no-color tfplan
 
-			- name: Terraform apply
-				run: terraform -chdir=terraform apply -input=false tfplan
+      - name: Terraform apply
+        run: terraform -chdir=terraform apply -input=false tfplan
