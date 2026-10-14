@@ -21,8 +21,8 @@ jobs:
     env:
       ARM_USE_CLI: "true"
       ARM_USE_AZUREAD: "true"
-      TF_VAR_github_actions_principal_object_id: ${{ vars.WEBSITE_PRINCIPAL_OBJECT_ID }}
-      TF_VAR_terraform_principal_object_id: ${{ vars.TERRAFORM_PRINCIPAL_OBJECT_ID }}
+      TF_VAR_github_actions_principal_object_id: ${{ secrets.WEBSITE_PRINCIPAL_OBJECT_ID }}
+      TF_VAR_terraform_principal_object_id: ${{ secrets.TERRAFORM_PRINCIPAL_OBJECT_ID }}
 
     steps:
       - name: Checkout repository
@@ -41,8 +41,8 @@ jobs:
       - name: Check principal object IDs
         shell: bash
         env:
-          WEBSITE_PRINCIPAL_ID: ${{ vars.WEBSITE_PRINCIPAL_OBJECT_ID }}
-          TERRAFORM_PRINCIPAL_ID: ${{ vars.TERRAFORM_PRINCIPAL_OBJECT_ID }}
+          WEBSITE_PRINCIPAL_ID: ${{ secrets.WEBSITE_PRINCIPAL_OBJECT_ID }}
+          TERRAFORM_PRINCIPAL_ID: ${{ secrets.TERRAFORM_PRINCIPAL_OBJECT_ID }}
         run: |
           guid_pattern='^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
           if [[ ! "${WEBSITE_PRINCIPAL_ID}" =~ ${guid_pattern} ]]; then
