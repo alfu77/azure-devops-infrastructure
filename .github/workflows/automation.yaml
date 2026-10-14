@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "portfolio website/**"
+      - "k8s/**"
+      - ".github/workflows/automation.yaml"
+
   workflow_dispatch:
 
 jobs:

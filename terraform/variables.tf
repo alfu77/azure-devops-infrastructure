@@ -7,6 +7,21 @@ variable "project_name" {
 variable "github_actions_principal_object_id" {
   description = "Object ID of the service principal used by the GitHub Actions workflow"
   type        = string
+
+  validation {
+    condition     = can(regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", var.github_actions_principal_object_id))
+    error_message = "Provide the website deployment service principal object ID as a GUID."
+  }
+}
+
+variable "terraform_principal_object_id" {
+  description = "Object ID of the service principal used by the Terraform workflow"
+  type        = string
+
+  validation {
+    condition     = can(regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", var.terraform_principal_object_id))
+    error_message = "Provide the Terraform service principal object ID as a GUID."
+  }
 }
 
 variable "location" {
