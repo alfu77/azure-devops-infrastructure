@@ -8,6 +8,8 @@ on:
     paths:
       - "terraform/**"
       - ".github/workflows/terraform.yaml"
+      
+ workflow_dispatch:
 
 permissions:
   contents: read
