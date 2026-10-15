@@ -1,3 +1,4 @@
+
 terraform {
   required_providers {
     azurerm = {
@@ -11,4 +12,7 @@ provider "azurerm" {
   subscription_id = "a3ca665f-a943-4a1c-bb07-d00847f550c5"
 
   features {}
+
+  use_cli  = true
+  use_oidc = true
 }

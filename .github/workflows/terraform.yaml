@@ -1,3 +1,4 @@
+
 name: Terraform Infrastructure
 
 on:
@@ -18,9 +19,11 @@ concurrency:
 jobs:
   terraform:
     runs-on: ubuntu-latest
+
     env:
       ARM_USE_CLI: "true"
       ARM_USE_AZUREAD: "true"
+      TF_IN_AUTOMATION: "true"
       TF_VAR_github_actions_principal_object_id: "8dc5278a-9016-4d62-91cd-119c948ded40"
       TF_VAR_terraform_principal_object_id: "ed81dc60-b8a8-4408-a0e0-07444cbc856b"
 
@@ -28,7 +31,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Log in to Azure with the Terraform identity
+      - name: Log in to Azure
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_TERRAFORM_CREDENTIALS }}
@@ -54,4 +57,4 @@ jobs:
         run: terraform -chdir=terraform show -no-color tfplan
 
       - name: Terraform apply
-        run: terraform -chdir=terraform apply -input=false tfplan
+        run: terraform -chdir=terraform apply -input=false -auto-approve tfplan

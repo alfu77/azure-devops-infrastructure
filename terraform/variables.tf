@@ -7,6 +7,7 @@ variable "project_name" {
 variable "github_actions_principal_object_id" {
   description = "Object ID of the service principal used by the GitHub Actions workflow"
   type        = string
+  default     = "8dc5278a-9016-4d62-91cd-119c948ded40"
 
   validation {
     condition     = can(regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", var.github_actions_principal_object_id))
@@ -17,6 +18,7 @@ variable "github_actions_principal_object_id" {
 variable "terraform_principal_object_id" {
   description = "Object ID of the service principal used by the Terraform workflow"
   type        = string
+  default     = "ed81dc60-b8a8-4408-a0e0-07444cbc856b"
 
   validation {
     condition     = can(regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", var.terraform_principal_object_id))
